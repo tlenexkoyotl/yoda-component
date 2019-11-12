@@ -1,0 +1,73 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="yoda-component">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+        <input type="text" placeholder="Name" value="{{name::input}}">
+        <input type="text" id="messageInput" placeholder="Morning greeting" on-input="_onGreetingChange">
+        <h2>[[personalGreeting]]!</h2>
+        <script>
+            document.querySelector('yoda-component')
+                .addEventListener('_morningGreetingChanged', event => {
+                    alert(event);
+                });
+        </script>
+    </template>
+
+    <script>
+        /**
+         * `yoda-component`
+         *
+         *
+         * @customElement
+         * @polymer
+         * @demo demo/index.html
+         */
+        class YodaComponent extends Polymer.Element {
+            static get is() {
+                return 'yoda-component';
+            }
+
+            static get properties() {
+                return {
+                    morningGreeting: {
+                        type: String,
+                        value: 'Good morning',
+                        reflectToAttribute: true,
+                        notify: true,
+                        observer: '_morningGreetingChanged'
+                    },
+                    name: {
+                        type: String,
+                        value: 'Alfonso'
+                    },
+                    personalGreeting: {
+                        type: String,
+                        computed: '_setPersonalGreeting(morningGreeting, name)'
+                    }
+                };
+            }
+
+            _morningGreetingChange() {
+                console.log(this.morningGreeting);
+            }
+
+            _setPersonalGreeting(greeting, name) {
+                return `${greeting}, ${name}`;
+            }
+
+            _onGreetingChange() {
+                const greeting = document.querySelector('#messageInput').value;
+
+                this.morningGreeting = greeting;
+                // console.log(event);
+            }
+        }
+
+        window.customElements.define(YodaComponent.is, YodaComponent);
+    </script>
+</dom-module>
